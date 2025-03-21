@@ -1,4 +1,6 @@
+import 'package:chat/constants.dart';
 import 'package:chat/core/utils/assets.dart';
+import 'package:chat/features/onboarding/on_boarding1.dart';
 import 'package:flutter/material.dart';
 
 class SplashBody extends StatefulWidget {
@@ -33,10 +35,12 @@ class _SplashBodyState extends State<SplashBody>
         child: Stack(
           children: [
             Positioned.fill(
-              left: 0,
-              right: 0,
-              top: 0,
+                child: Container(
+              color: kPrimaryColor,
+            )),
+            Positioned.fill(
               child: Image.asset(
+                fit: BoxFit.cover,
                 Assets.splashBackground,
               ),
             ),
@@ -70,9 +74,9 @@ class _SplashBodyState extends State<SplashBody>
     Future.delayed(
       const Duration(seconds: 3),
       () {
-        // Navigator.of(context).pushReplacement(MaterialPageRoute(
-        //   builder: (context) => HomeView(),
-        // ));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => const OnBoarding1(),
+        ));
       },
     );
   }

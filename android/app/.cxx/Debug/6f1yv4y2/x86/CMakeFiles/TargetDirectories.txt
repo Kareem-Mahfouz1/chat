@@ -1,0 +1,2 @@
+F:/Kareem/projects/chat/android/app/.cxx/Debug/6f1yv4y2/x86/CMakeFiles/edit_cache.dir
+F:/Kareem/projects/chat/android/app/.cxx/Debug/6f1yv4y2/x86/CMakeFiles/rebuild_cache.dir
