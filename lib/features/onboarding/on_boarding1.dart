@@ -1,10 +1,11 @@
 import 'package:chat/constants.dart';
+import 'package:chat/core/utils/app_router.dart';
 import 'package:chat/core/utils/assets.dart';
 import 'package:chat/core/utils/styles.dart';
 import 'package:chat/core/widgets/my_button.dart';
-import 'package:chat/features/onboarding/on_boarding2.dart';
 import 'package:chat/features/onboarding/widgets/on_boarding_appbar.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class OnBoarding1 extends StatelessWidget {
   const OnBoarding1({super.key});
@@ -34,9 +35,7 @@ class OnBoarding1 extends StatelessWidget {
               child: MyButton(
                 text: 'Next',
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const OnBoarding2(),
-                  ));
+                  GoRouter.of(context).go(AppRouter.kOnBoarding2);
                 },
               ),
             ),

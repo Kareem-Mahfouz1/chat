@@ -28,7 +28,7 @@ class LoginAppbar extends StatelessWidget {
             ),
             const SizedBox(height: 5),
             Text(
-              'Enter your 11-digit mobile number to continue.',
+              'Enter your information to continue.',
               style: Styles.textStyle20.copyWith(color: Colors.white),
             ),
             const SizedBox(height: 50)

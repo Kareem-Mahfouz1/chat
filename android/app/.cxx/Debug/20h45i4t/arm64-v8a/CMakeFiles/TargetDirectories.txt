@@ -1,0 +1,2 @@
+F:/Kareem/projects/chat/android/app/.cxx/Debug/20h45i4t/arm64-v8a/CMakeFiles/edit_cache.dir
+F:/Kareem/projects/chat/android/app/.cxx/Debug/20h45i4t/arm64-v8a/CMakeFiles/rebuild_cache.dir

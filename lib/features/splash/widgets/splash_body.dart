@@ -1,7 +1,8 @@
 import 'package:chat/constants.dart';
+import 'package:chat/core/utils/app_router.dart';
 import 'package:chat/core/utils/assets.dart';
-import 'package:chat/features/onboarding/on_boarding1.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SplashBody extends StatefulWidget {
   const SplashBody({super.key});
@@ -74,9 +75,9 @@ class _SplashBodyState extends State<SplashBody>
     Future.delayed(
       const Duration(seconds: 3),
       () {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => const OnBoarding1(),
-        ));
+        if (mounted) {
+          GoRouter.of(context).go(AppRouter.kOnBoarding1);
+        }
       },
     );
   }

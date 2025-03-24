@@ -1,10 +1,11 @@
 import 'package:chat/constants.dart';
+import 'package:chat/core/utils/app_router.dart';
 import 'package:chat/core/utils/assets.dart';
 import 'package:chat/core/utils/styles.dart';
 import 'package:chat/core/widgets/my_button.dart';
-import 'package:chat/features/auth/presentation/views/register_view.dart';
 import 'package:chat/features/onboarding/widgets/on_boarding_appbar.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class OnBoarding3 extends StatelessWidget {
   const OnBoarding3({super.key});
@@ -34,9 +35,7 @@ class OnBoarding3 extends StatelessWidget {
               child: MyButton(
                 text: 'Get Started',
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const RegisterView(),
-                  ));
+                  GoRouter.of(context).go(AppRouter.kRegisterView);
                 },
               ),
             ),
