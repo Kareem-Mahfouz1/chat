@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "239854017858",
+    "project_id": "chatboat-bf246",
+    "storage_bucket": "chatboat-bf246.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:239854017858:android:a60d5e2467168792dbbcdb",
+        "android_client_info": {
+          "package_name": "com.example.chat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaZ5CMkZezV0_yu11C6exrizkmVWTziF8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
