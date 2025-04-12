@@ -4,6 +4,8 @@ import 'package:chat/features/auth/presentation/cubits/login_cubit/login_cubit.d
 import 'package:chat/features/auth/presentation/cubits/register_cubit/register_cubit.dart';
 import 'package:chat/features/auth/presentation/views/login_view.dart';
 import 'package:chat/features/auth/presentation/views/register_view.dart';
+import 'package:chat/features/chats/presentation/views/chat_inside_view.dart';
+import 'package:chat/features/home/presentation/views/home_view.dart';
 import 'package:chat/features/onboarding/on_boarding1.dart';
 import 'package:chat/features/onboarding/on_boarding2.dart';
 import 'package:chat/features/onboarding/on_boarding3.dart';
@@ -17,10 +19,12 @@ abstract class AppRouter {
   static const kOnBoarding3 = '/onBoarding3';
   static const kRegisterView = '/registerView';
   static const kLoginView = '/loginView';
+  static const kHomeView = '/homeView';
+  static const kChatInsideView = '/chatInsideView';
   static final router = GoRouter(
     routes: [
       GoRoute(
-        path: '/',
+        path: '/s',
         builder: (context, state) => const SplashView(),
       ),
       GoRoute(
@@ -48,6 +52,14 @@ abstract class AppRouter {
           create: (context) => LoginCubit(getIt.get<AuthRepoImpl>()),
           child: const LoginView(),
         ),
+      ),
+      GoRoute(
+        path: '/',
+        builder: (context, state) => const HomeView(),
+      ),
+      GoRoute(
+        path: kChatInsideView,
+        builder: (context, state) => const ChatInsideView(),
       ),
     ],
   );

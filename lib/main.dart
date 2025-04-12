@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: kBackgrounColor,
+        scaffoldBackgroundColor: kBackgroundColor,
         textTheme: GoogleFonts.interTextTheme(),
       ),
       routerConfig: AppRouter.router,
