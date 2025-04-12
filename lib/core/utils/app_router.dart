@@ -6,9 +6,8 @@ import 'package:chat/features/auth/presentation/views/login_view.dart';
 import 'package:chat/features/auth/presentation/views/register_view.dart';
 import 'package:chat/features/chats/presentation/views/chat_inside_view.dart';
 import 'package:chat/features/home/presentation/views/home_view.dart';
-import 'package:chat/features/onboarding/on_boarding1.dart';
-import 'package:chat/features/onboarding/on_boarding2.dart';
-import 'package:chat/features/onboarding/on_boarding3.dart';
+import 'package:chat/features/onboarding/cubits/on_boarding_cubit.dart';
+import 'package:chat/features/onboarding/on_boarding.dart';
 import 'package:chat/features/splash/splash_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -24,20 +23,15 @@ abstract class AppRouter {
   static final router = GoRouter(
     routes: [
       GoRoute(
-        path: '/s',
+        path: '/',
         builder: (context, state) => const SplashView(),
       ),
       GoRoute(
         path: kOnBoarding1,
-        builder: (context, state) => const OnBoarding1(),
-      ),
-      GoRoute(
-        path: kOnBoarding2,
-        builder: (context, state) => const OnBoarding2(),
-      ),
-      GoRoute(
-        path: kOnBoarding3,
-        builder: (context, state) => const OnBoarding3(),
+        builder: (context, state) => BlocProvider(
+          create: (context) => OnBoardingCubit(),
+          child: const OnBoarding(),
+        ),
       ),
       GoRoute(
         path: kRegisterView,
@@ -54,7 +48,7 @@ abstract class AppRouter {
         ),
       ),
       GoRoute(
-        path: '/',
+        path: kHomeView,
         builder: (context, state) => const HomeView(),
       ),
       GoRoute(
