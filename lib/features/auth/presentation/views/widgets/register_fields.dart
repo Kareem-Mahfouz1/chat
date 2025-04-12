@@ -21,6 +21,7 @@ class RegisterFields extends StatelessWidget {
         children: [
           TextFormField(
             validator: Validator.validateName,
+            controller: context.read<RegisterCubit>().nameController,
             decoration: InputDecoration(
               hintText: 'Enter your name',
               floatingLabelStyle:

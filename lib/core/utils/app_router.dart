@@ -1,5 +1,6 @@
 import 'package:chat/core/utils/service_locator.dart';
 import 'package:chat/features/auth/data/repos/auth_repo_impl.dart';
+import 'package:chat/features/auth/data/repos/user_repo_impl.dart';
 import 'package:chat/features/auth/presentation/cubits/login_cubit/login_cubit.dart';
 import 'package:chat/features/auth/presentation/cubits/register_cubit/register_cubit.dart';
 import 'package:chat/features/auth/presentation/views/login_view.dart';
@@ -13,9 +14,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 abstract class AppRouter {
-  static const kOnBoarding1 = '/onBoarding1';
-  static const kOnBoarding2 = '/onBoarding2';
-  static const kOnBoarding3 = '/onBoarding3';
+  static const kOnBoardingView = '/onBoardingView';
   static const kRegisterView = '/registerView';
   static const kLoginView = '/loginView';
   static const kHomeView = '/homeView';
@@ -27,7 +26,7 @@ abstract class AppRouter {
         builder: (context, state) => const SplashView(),
       ),
       GoRoute(
-        path: kOnBoarding1,
+        path: kOnBoardingView,
         builder: (context, state) => BlocProvider(
           create: (context) => OnBoardingCubit(),
           child: const OnBoarding(),
@@ -36,7 +35,8 @@ abstract class AppRouter {
       GoRoute(
         path: kRegisterView,
         builder: (context, state) => BlocProvider(
-          create: (context) => RegisterCubit(getIt.get<AuthRepoImpl>()),
+          create: (context) => RegisterCubit(
+              getIt.get<AuthRepoImpl>(), getIt.get<UserRepoImpl>()),
           child: const RegisterView(),
         ),
       ),

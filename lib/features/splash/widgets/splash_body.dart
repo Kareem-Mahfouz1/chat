@@ -76,7 +76,7 @@ class _SplashBodyState extends State<SplashBody>
       const Duration(seconds: 3),
       () {
         if (mounted) {
-          GoRouter.of(context).go(AppRouter.kOnBoarding1);
+          GoRouter.of(context).go(AppRouter.kOnBoardingView);
         }
       },
     );
