@@ -1,4 +1,5 @@
 import 'package:chat/constants.dart';
+import 'package:chat/core/utils/app_router.dart';
 import 'package:chat/core/utils/styles.dart';
 import 'package:chat/core/widgets/custom_loading_indicator.dart';
 import 'package:chat/core/widgets/my_button.dart';
@@ -41,12 +42,7 @@ class LoginView extends StatelessWidget {
                         child: BlocConsumer<LoginCubit, LoginState>(
                           listener: (context, state) {
                             if (state is LoginSuccess) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content:
-                                      Text(state.userCredential.toString()),
-                                ),
-                              );
+                              GoRouter.of(context).go(AppRouter.kHomeView);
                             } else if (state is LoginFailure) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(

@@ -5,6 +5,8 @@ import 'package:chat/features/auth/presentation/cubits/login_cubit/login_cubit.d
 import 'package:chat/features/auth/presentation/cubits/register_cubit/register_cubit.dart';
 import 'package:chat/features/auth/presentation/views/login_view.dart';
 import 'package:chat/features/auth/presentation/views/register_view.dart';
+import 'package:chat/features/chats/data/repos/chats_repo_impl.dart';
+import 'package:chat/features/chats/presentation/cubits/chats_cubit/chats_cubit.dart';
 import 'package:chat/features/chats/presentation/views/chat_inside_view.dart';
 import 'package:chat/features/home/presentation/views/home_view.dart';
 import 'package:chat/features/onboarding/cubits/on_boarding_cubit.dart';
@@ -49,7 +51,16 @@ abstract class AppRouter {
       ),
       GoRoute(
         path: kHomeView,
-        builder: (context, state) => const HomeView(),
+        builder: (context, state) => MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (_) => ChatsCubit(
+                (getIt.get<ChatsRepoImpl>()),
+              ),
+            ),
+          ],
+          child: const HomeView(),
+        ),
       ),
       GoRoute(
         path: kChatInsideView,

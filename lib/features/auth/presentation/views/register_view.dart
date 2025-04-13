@@ -42,12 +42,7 @@ class RegisterView extends StatelessWidget {
                         child: BlocConsumer<RegisterCubit, RegisterState>(
                           listener: (context, state) {
                             if (state is RegisterSuccess) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content:
-                                      Text(state.userCredential.toString()),
-                                ),
-                              );
+                              GoRouter.of(context).go(AppRouter.kHomeView);
                             } else if (state is RegisterFailure) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
