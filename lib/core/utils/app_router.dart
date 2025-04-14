@@ -8,6 +8,8 @@ import 'package:chat/features/auth/presentation/views/register_view.dart';
 import 'package:chat/features/chats/data/repos/chats_repo_impl.dart';
 import 'package:chat/features/chats/presentation/cubits/chats_cubit/chats_cubit.dart';
 import 'package:chat/features/chats/presentation/views/chat_inside_view.dart';
+import 'package:chat/features/contacts/data/repos/contacts_repo_impl.dart';
+import 'package:chat/features/contacts/presentation/cubits/contacts_cubit/contacts_cubit.dart';
 import 'package:chat/features/home/presentation/views/home_view.dart';
 import 'package:chat/features/onboarding/cubits/on_boarding_cubit.dart';
 import 'package:chat/features/onboarding/on_boarding.dart';
@@ -56,7 +58,12 @@ abstract class AppRouter {
             BlocProvider(
               create: (_) => ChatsCubit(
                 (getIt.get<ChatsRepoImpl>()),
-              ),
+              )..streamUserChats(),
+            ),
+            BlocProvider(
+              create: (_) => ContactsCubit(
+                (getIt.get<ContactsRepoImpl>()),
+              )..getContacts(),
             ),
           ],
           child: const HomeView(),

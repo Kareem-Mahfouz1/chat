@@ -1,8 +1,10 @@
 import 'package:chat/constants.dart';
 import 'package:chat/core/utils/app_router.dart';
 import 'package:chat/core/utils/assets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashBody extends StatefulWidget {
   const SplashBody({super.key});
@@ -19,7 +21,7 @@ class _SplashBodyState extends State<SplashBody>
   @override
   void initState() {
     initAnimation();
-    navigateToHome();
+    handleNavigation();
     super.initState();
   }
 
@@ -71,14 +73,21 @@ class _SplashBodyState extends State<SplashBody>
     animationController.forward();
   }
 
-  void navigateToHome() {
-    Future.delayed(
-      const Duration(seconds: 3),
-      () {
-        if (mounted) {
-          GoRouter.of(context).go(AppRouter.kOnBoardingView);
-        }
-      },
-    );
+  void handleNavigation() async {
+    await Future.delayed(const Duration(seconds: 3));
+
+    if (!mounted) return;
+
+    final prefs = await SharedPreferences.getInstance();
+    final onboardingComplete = prefs.getBool('onboarding_completed') ?? false;
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (!onboardingComplete) {
+      GoRouter.of(context).go(AppRouter.kOnBoardingView);
+    } else if (user != null) {
+      GoRouter.of(context).go(AppRouter.kHomeView);
+    } else {
+      GoRouter.of(context).go(AppRouter.kLoginView);
+    }
   }
 }

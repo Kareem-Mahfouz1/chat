@@ -1,4 +1,5 @@
 import 'package:chat/features/chats/presentation/views/chats_view.dart';
+import 'package:chat/features/contacts/presentation/views/contacts_view.dart';
 import 'package:flutter/material.dart';
 
 class HomeView extends StatefulWidget {
@@ -17,7 +18,7 @@ class _HomeViewState extends State<HomeView> {
         index: currentIndex,
         children: const [
           ChatsView(),
-          ChatsView(),
+          ContactsView(),
           ChatsView(),
         ],
       ),

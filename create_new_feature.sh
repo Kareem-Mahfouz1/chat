@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the base directory for the home feature
-FEATURE_NAME="chats"
+FEATURE_NAME="contacts"
 BASE_DIR="lib/features/$FEATURE_NAME"
 
 # Create necessary directories
@@ -16,3 +16,5 @@ mkdir -p $BASE_DIR/data/repos
 touch $BASE_DIR/presentation/views/${FEATURE_NAME}_view.dart
 
 echo "${FEATURE_NAME} feature structure created successfully!"
+# Run the following command after saving the script:
+# ./create_new_feature.sh

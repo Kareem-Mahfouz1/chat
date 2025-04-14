@@ -1,5 +1,6 @@
 import 'package:chat/constants.dart';
 import 'package:chat/core/utils/app_router.dart';
+import 'package:chat/core/utils/on_boarding_storage.dart';
 import 'package:chat/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -17,8 +18,11 @@ class SkipButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(35),
         ),
       ),
-      onPressed: () {
-        GoRouter.of(context).go(AppRouter.kRegisterView);
+      onPressed: () async {
+        await OnboardingStorage().setOnboardingComplete();
+        if (context.mounted) {
+          GoRouter.of(context).go(AppRouter.kRegisterView);
+        }
       },
       child: const Text(
         'Skip',

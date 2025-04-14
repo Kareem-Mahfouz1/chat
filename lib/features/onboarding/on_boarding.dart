@@ -1,6 +1,7 @@
 import 'package:chat/constants.dart';
 import 'package:chat/core/utils/app_router.dart';
 import 'package:chat/core/utils/assets.dart';
+import 'package:chat/core/utils/on_boarding_storage.dart';
 import 'package:chat/core/widgets/my_button.dart';
 import 'package:chat/features/onboarding/cubits/on_boarding_cubit.dart';
 import 'package:chat/features/onboarding/widgets/on_boarding_appbar.dart';
@@ -55,9 +56,12 @@ class OnBoarding extends StatelessWidget {
                   final cubit = context.read<OnBoardingCubit>();
                   return MyButton(
                     text: state == texts.length - 1 ? 'Get Started' : 'Next',
-                    onPressed: () {
+                    onPressed: () async {
                       if (state == texts.length - 1) {
-                        GoRouter.of(context).go(AppRouter.kRegisterView);
+                        await OnboardingStorage().setOnboardingComplete();
+                        if (context.mounted) {
+                          GoRouter.of(context).go(AppRouter.kRegisterView);
+                        }
                       } else {
                         cubit.nextPage(texts.length);
                       }
