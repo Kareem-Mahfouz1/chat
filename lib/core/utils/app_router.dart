@@ -1,6 +1,6 @@
 import 'package:chat/core/utils/service_locator.dart';
 import 'package:chat/features/auth/data/repos/auth_repo_impl.dart';
-import 'package:chat/features/auth/data/repos/user_repo_impl.dart';
+import 'package:chat/core/services/user_repo_impl.dart';
 import 'package:chat/features/auth/presentation/cubits/login_cubit/login_cubit.dart';
 import 'package:chat/features/auth/presentation/cubits/register_cubit/register_cubit.dart';
 import 'package:chat/features/auth/presentation/views/login_view.dart';
@@ -17,6 +17,8 @@ import 'package:chat/features/contacts/presentation/cubits/contacts_cubit/contac
 import 'package:chat/features/home/presentation/views/home_view.dart';
 import 'package:chat/features/onboarding/cubits/on_boarding_cubit.dart';
 import 'package:chat/features/onboarding/on_boarding.dart';
+import 'package:chat/features/settings/presentation/cubits/settings_cubit/settings_cubit.dart';
+import 'package:chat/features/settings/presentation/cubits/user_cubit/user_cubit.dart';
 import 'package:chat/features/splash/splash_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -69,6 +71,16 @@ abstract class AppRouter {
               create: (_) => ContactsCubit(
                 (getIt.get<ContactsRepoImpl>()),
               )..getContacts(),
+            ),
+            BlocProvider(
+              create: (_) => UserCubit(
+                (getIt.get<UserRepoImpl>()),
+              )..loadUser(),
+            ),
+            BlocProvider(
+              create: (_) => SettingsCubit(
+                (getIt.get<UserRepoImpl>()),
+              ),
             ),
           ],
           child: const HomeView(),

@@ -2,6 +2,7 @@ import 'package:chat/core/errors/failures.dart';
 import 'package:chat/core/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class UserRepoImpl {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -26,8 +27,9 @@ class UserRepoImpl {
     }
   }
 
-  Future<Either<Failure, UserModel>> getUserById(String uid) async {
+  Future<Either<Failure, UserModel>> getCurrentUser() async {
     try {
+      final uid = FirebaseAuth.instance.currentUser!.uid;
       final doc = await _firestore.collection('users').doc(uid).get();
       if (doc.exists) {
         return Right(UserModel.fromMap(uid, doc.data()!));
@@ -38,22 +40,35 @@ class UserRepoImpl {
     }
   }
 
-  Future<Either<Failure, UserModel>> getUserByPhoneNumber(
-      String phoneNumber) async {
+  Future<Either<Failure, void>> deleteUserAccount() async {
     try {
-      final querySnapshot = await _firestore
-          .collection('users')
-          .where('phoneNumber', isEqualTo: phoneNumber)
-          .get();
+      final user = FirebaseAuth.instance.currentUser!;
+      final uid = user.uid;
 
-      if (querySnapshot.docs.isNotEmpty) {
-        final doc = querySnapshot.docs.first;
-        return Right(UserModel.fromMap(doc.id, doc.data()));
-      } else {
-        return Left(ServerFailure('User not found'));
-      }
+      await _firestore.collection('users').doc(uid).delete();
+
+      await user.delete();
+
+      return const Right(null);
+    } on FirebaseAuthException catch (e) {
+      return Left(ServerFailure.fromFirebaseAuthException(e));
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  Future<Either<Failure, void>> updateUserProfile(UserModel user) async {
+    try {
+      await _firestore.collection('users').doc(user.uid).update(user.toMap());
+      return const Right(null);
     } on FirebaseException catch (e) {
       return Left(ServerFailure.fromFirebaseException(e));
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
     }
+  }
+
+  Future<void> logout() async {
+    await FirebaseAuth.instance.signOut();
   }
 }
