@@ -17,11 +17,21 @@ class ChatModel {
 
   factory ChatModel.fromDoc(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
+
+    DateTime lastUpdated;
+
+    final raw = data['lastUpdated'];
+    if (raw is Timestamp) {
+      lastUpdated = raw.toDate();
+    } else {
+      lastUpdated = DateTime.now(); // fallback
+    }
+
     return ChatModel(
       chatId: doc.id,
       participants: List<String>.from(data['participants'] ?? []),
       lastMessage: data['lastMessage'] ?? '',
-      lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
+      lastUpdated: lastUpdated,
       participantNames:
           Map<String, String>.from(data['participantNames'] ?? {}),
     );

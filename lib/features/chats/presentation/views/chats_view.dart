@@ -1,6 +1,5 @@
+import 'package:chat/constants.dart';
 import 'package:chat/core/utils/app_router.dart';
-import 'package:chat/core/utils/assets.dart';
-import 'package:chat/core/utils/styles.dart';
 import 'package:chat/core/widgets/custom_loading_indicator.dart';
 import 'package:chat/core/widgets/empty_list.dart';
 import 'package:chat/features/chats/presentation/cubits/chats_cubit/chats_cubit.dart';
@@ -9,6 +8,7 @@ import 'package:chat/features/chats/presentation/views/widgets/chats_appbar.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class ChatsView extends StatelessWidget {
   const ChatsView({super.key});
@@ -34,8 +34,9 @@ class ChatsView extends StatelessWidget {
                           itemBuilder: (context, index) {
                             return InkWell(
                               onTap: () {
-                                GoRouter.of(context)
-                                    .push(AppRouter.kChatInsideView);
+                                GoRouter.of(context).push(
+                                    AppRouter.kChatInsideView,
+                                    extra: state.chatList[index]);
                               },
                               child: ChatItem(chat: state.chatList[index]),
                             );
@@ -50,6 +51,15 @@ class ChatsView extends StatelessWidget {
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: kPrimaryColor,
+        foregroundColor: Colors.white,
+        shape: const CircleBorder(),
+        child: Icon(MdiIcons.messagePlusOutline),
+        onPressed: () {
+          GoRouter.of(context).push(AppRouter.kStartChatView);
+        },
       ),
     );
   }

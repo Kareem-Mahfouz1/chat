@@ -75,19 +75,22 @@ class _SplashBodyState extends State<SplashBody>
 
   void handleNavigation() async {
     await Future.delayed(const Duration(seconds: 3));
-
-    if (!mounted) return;
+    // //TODO
+    // await FirebaseAuth.instance.signOut();
 
     final prefs = await SharedPreferences.getInstance();
     final onboardingComplete = prefs.getBool('onboarding_completed') ?? false;
+
     final user = FirebaseAuth.instance.currentUser;
 
-    if (!onboardingComplete) {
-      GoRouter.of(context).go(AppRouter.kOnBoardingView);
-    } else if (user != null) {
-      GoRouter.of(context).go(AppRouter.kHomeView);
-    } else {
-      GoRouter.of(context).go(AppRouter.kLoginView);
+    if (mounted) {
+      if (!onboardingComplete) {
+        GoRouter.of(context).go(AppRouter.kOnBoardingView);
+      } else if (user != null) {
+        GoRouter.of(context).go(AppRouter.kHomeView);
+      } else {
+        GoRouter.of(context).go(AppRouter.kRegisterView);
+      }
     }
   }
 }

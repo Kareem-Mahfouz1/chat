@@ -3,9 +3,8 @@ import 'package:chat/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class ChatInsideAppbar extends StatelessWidget {
-  const ChatInsideAppbar({super.key, required this.name});
-  final String name;
+class StartChatAppbar extends StatelessWidget {
+  const StartChatAppbar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +37,7 @@ class ChatInsideAppbar extends StatelessWidget {
                   size: 32,
                 )),
             Text(
-              name,
+              'Start a Chat',
               style: Styles.textStyle24.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.w500,
@@ -48,7 +47,7 @@ class ChatInsideAppbar extends StatelessWidget {
             IconButton(
               onPressed: () {},
               icon: const Icon(
-                Icons.more_vert,
+                Icons.search,
                 color: Colors.white,
                 size: 32,
               ),

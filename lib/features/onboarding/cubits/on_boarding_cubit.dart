@@ -15,10 +15,4 @@ class OnBoardingCubit extends Cubit<int> {
   }
 
   void setPage(int index) => emit(index);
-
-  @override
-  Future<void> close() {
-    controller.dispose();
-    return super.close();
-  }
 }

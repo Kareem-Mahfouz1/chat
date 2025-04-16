@@ -16,7 +16,6 @@ class ContactsRepoImpl {
       final contactList =
           List<Map<String, dynamic>>.from(data['contacts'] ?? []);
       final contacts = contactList.map((c) => Contact.fromMap(c)).toList();
-      print('--------------------------------------------contacts done');
       return Right(contacts);
     } on FirebaseException catch (e) {
       return Left(ServerFailure.fromFirebaseException(e));

@@ -19,7 +19,9 @@ class _HomeViewState extends State<HomeView> {
         children: const [
           ChatsView(),
           ContactsView(),
-          ChatsView(),
+          Center(
+            child: Text('Settings'),
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

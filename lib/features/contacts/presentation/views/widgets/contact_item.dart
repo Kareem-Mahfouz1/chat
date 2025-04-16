@@ -4,7 +4,9 @@ import 'package:chat/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 
 class ContactItem extends StatelessWidget {
-  const ContactItem({super.key});
+  const ContactItem({super.key, this.onTap, required this.name});
+  final Function()? onTap;
+  final String name;
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +18,10 @@ class ContactItem extends StatelessWidget {
         backgroundImage: AssetImage(Assets.stockAvatar),
       ),
       title: Text(
-        'contact',
+        name,
         style: Styles.textStyle16.copyWith(fontWeight: FontWeight.w500),
       ),
+      onTap: onTap,
     );
   }
 }

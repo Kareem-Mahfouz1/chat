@@ -5,9 +5,13 @@ import 'package:chat/features/auth/presentation/cubits/login_cubit/login_cubit.d
 import 'package:chat/features/auth/presentation/cubits/register_cubit/register_cubit.dart';
 import 'package:chat/features/auth/presentation/views/login_view.dart';
 import 'package:chat/features/auth/presentation/views/register_view.dart';
+import 'package:chat/features/chats/data/models/chat_model.dart';
 import 'package:chat/features/chats/data/repos/chats_repo_impl.dart';
+import 'package:chat/features/chats/data/repos/messages_repo_impl.dart';
 import 'package:chat/features/chats/presentation/cubits/chats_cubit/chats_cubit.dart';
+import 'package:chat/features/chats/presentation/cubits/messages_cubit/messages_cubit.dart';
 import 'package:chat/features/chats/presentation/views/chat_inside_view.dart';
+import 'package:chat/features/chats/presentation/views/start_chat_view.dart';
 import 'package:chat/features/contacts/data/repos/contacts_repo_impl.dart';
 import 'package:chat/features/contacts/presentation/cubits/contacts_cubit/contacts_cubit.dart';
 import 'package:chat/features/home/presentation/views/home_view.dart';
@@ -23,6 +27,7 @@ abstract class AppRouter {
   static const kLoginView = '/loginView';
   static const kHomeView = '/homeView';
   static const kChatInsideView = '/chatInsideView';
+  static const kStartChatView = '/startChatView';
   static final router = GoRouter(
     routes: [
       GoRoute(
@@ -70,8 +75,21 @@ abstract class AppRouter {
         ),
       ),
       GoRoute(
+        path: kStartChatView,
+        builder: (context, state) => BlocProvider(
+          create: (_) => ContactsCubit(
+            (getIt.get<ContactsRepoImpl>()),
+          )..getContacts(),
+          child: const StartChatView(),
+        ),
+      ),
+      GoRoute(
         path: kChatInsideView,
-        builder: (context, state) => const ChatInsideView(),
+        builder: (context, state) => BlocProvider(
+          create: (context) => MessagesCubit(getIt.get<MessageRepoImpl>())
+            ..streamMessages((state.extra as ChatModel).chatId),
+          child: ChatInsideView(chatModel: state.extra as ChatModel),
+        ),
       ),
     ],
   );
