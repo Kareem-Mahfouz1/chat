@@ -2,8 +2,8 @@ import 'package:chat/constants.dart';
 import 'package:chat/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 
-class ChatsAppbar extends StatelessWidget {
-  const ChatsAppbar({super.key});
+class SettingsAppbar extends StatelessWidget {
+  const SettingsAppbar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,20 +27,12 @@ class ChatsAppbar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Chats',
+              'Settings',
               style: Styles.textStyle24.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.search,
-                color: Colors.white,
-                size: 32,
-              ),
-            )
           ],
         ),
       ),

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the base directory for the home feature
-FEATURE_NAME="contacts"
+FEATURE_NAME="settings"
 BASE_DIR="lib/features/$FEATURE_NAME"
 
 # Create necessary directories
