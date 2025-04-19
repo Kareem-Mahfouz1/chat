@@ -20,8 +20,8 @@ class SettingsAppbar extends StatelessWidget {
         padding: const EdgeInsets.only(
           right: kHorizontalPadding,
           left: kHorizontalPadding,
-          top: 30,
-          bottom: 25,
+          top: 50,
+          bottom: 15,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

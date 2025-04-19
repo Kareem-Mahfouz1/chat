@@ -53,6 +53,7 @@ class ChatsView extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'CHATS_FAB',
         backgroundColor: kPrimaryColor,
         foregroundColor: Colors.white,
         shape: const CircleBorder(),

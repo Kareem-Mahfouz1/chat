@@ -14,6 +14,7 @@ class RegisterFields extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mobileNode = FocusNode();
     return Form(
       key: context.read<RegisterCubit>().formKey,
       child: Column(
@@ -21,6 +22,7 @@ class RegisterFields extends StatelessWidget {
         children: [
           TextFormField(
             validator: Validator.validateName,
+            textInputAction: TextInputAction.next,
             controller: context.read<RegisterCubit>().nameController,
             decoration: InputDecoration(
               hintText: 'Enter your name',
@@ -36,6 +38,7 @@ class RegisterFields extends StatelessWidget {
           ),
           TextFormField(
             validator: Validator.validateEmail,
+            textInputAction: TextInputAction.next,
             controller: context.read<RegisterCubit>().emailController,
             decoration: InputDecoration(
               hintText: 'Enter your email',
@@ -54,9 +57,12 @@ class RegisterFields extends StatelessWidget {
               return TextFormField(
                 obscureText: isObscured,
                 validator: Validator.validatePassword,
+                onFieldSubmitted: (_) =>
+                    FocusScope.of(context).requestFocus(mobileNode),
                 controller: context.read<RegisterCubit>().passwordController,
                 decoration: InputDecoration(
                   hintText: 'Enter your password',
+                  errorMaxLines: 3,
                   floatingLabelStyle:
                       Styles.textStyle14Regular.copyWith(color: kPrimaryColor),
                   label: const Text('Password'),
@@ -78,6 +84,8 @@ class RegisterFields extends StatelessWidget {
           ),
           TextFormField(
             validator: Validator.validateMobileNumber,
+            focusNode: mobileNode,
+            textInputAction: TextInputAction.done,
             controller: context.read<RegisterCubit>().mobileController,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(

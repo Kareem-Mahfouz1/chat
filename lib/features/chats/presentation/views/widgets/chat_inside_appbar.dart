@@ -22,8 +22,8 @@ class ChatInsideAppbar extends StatelessWidget {
         padding: const EdgeInsets.only(
           right: kHorizontalPadding,
           left: 5,
-          top: 30,
-          bottom: 20,
+          top: 45,
+          bottom: 5,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,

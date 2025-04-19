@@ -1,10 +1,16 @@
+import 'package:chat/constants.dart';
+import 'package:chat/core/utils/service_locator.dart';
 import 'package:chat/core/widgets/custom_loading_indicator.dart';
 import 'package:chat/core/widgets/empty_list.dart';
+import 'package:chat/features/contacts/data/repos/contacts_repo_impl.dart';
+import 'package:chat/features/contacts/presentation/cubits/add_contact_cubit/add_contact_cubit.dart';
 import 'package:chat/features/contacts/presentation/cubits/contacts_cubit/contacts_cubit.dart';
+import 'package:chat/features/contacts/presentation/views/widgets/add_contact_dialog.dart';
 import 'package:chat/features/contacts/presentation/views/widgets/contact_item.dart';
 import 'package:chat/features/contacts/presentation/views/widgets/contacts_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class ContactsView extends StatelessWidget {
   const ContactsView({super.key});
@@ -43,6 +49,33 @@ class ContactsView extends StatelessWidget {
             ),
           )
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        heroTag: 'CONTACTS_FAB',
+        backgroundColor: kPrimaryColor,
+        foregroundColor: Colors.white,
+        shape: const CircleBorder(),
+        child: Icon(MdiIcons.accountPlusOutline),
+        onPressed: () {
+          final contactsCubit = context.read<ContactsCubit>();
+          showDialog(
+            context: context,
+            builder: (context) {
+              return MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create: (context) =>
+                        AddContactCubit(getIt.get<ContactsRepoImpl>()),
+                  ),
+                  BlocProvider.value(
+                    value: contactsCubit,
+                  ),
+                ],
+                child: const AddContactDialog(),
+              );
+            },
+          );
+        },
       ),
     );
   }

@@ -23,8 +23,8 @@ class ConfirmationDialog extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            Navigator.pop(context); // Close dialog
-            context.read<SettingsCubit>().deleteAccount(); // Trigger deletion
+            Navigator.pop(context);
+            context.read<SettingsCubit>().deleteAccount();
           },
           child: const Text("Delete", style: TextStyle(color: Colors.red)),
         ),

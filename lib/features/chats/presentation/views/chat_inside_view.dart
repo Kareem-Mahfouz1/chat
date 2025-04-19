@@ -11,21 +11,28 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ChatInsideView extends StatelessWidget {
+class ChatInsideView extends StatefulWidget {
   const ChatInsideView({super.key, required this.chatModel});
   final ChatModel chatModel;
 
   @override
+  State<ChatInsideView> createState() => _ChatInsideViewState();
+}
+
+class _ChatInsideViewState extends State<ChatInsideView> {
+  final ScrollController _scrollController = ScrollController();
+  @override
   Widget build(BuildContext context) {
-    final otherUserId = chatModel.participants
+    final otherUserId = widget.chatModel.participants
         .firstWhere((uid) => uid != FirebaseAuth.instance.currentUser!.uid);
-    final otherUserName = chatModel.participantNames[otherUserId] ?? "Unknown";
+    final otherUserName =
+        widget.chatModel.participantNames[otherUserId] ?? "Unknown";
     return Scaffold(
       body: Stack(
         children: [
           Positioned.fill(
               child: Container(
-            color: kBackgroundColor,
+            color: kChatBackgroundColor,
           )),
           Positioned.fill(
             child: Image.asset(
@@ -85,7 +92,7 @@ class ChatInsideView extends StatelessWidget {
                     );
                   }
                 },
-                child: ChatTextField(chatId: chatModel.chatId),
+                child: ChatTextField(chatId: widget.chatModel.chatId),
               ),
             ],
           ),

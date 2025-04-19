@@ -20,8 +20,8 @@ class ChatsAppbar extends StatelessWidget {
         padding: const EdgeInsets.only(
           right: kHorizontalPadding,
           left: kHorizontalPadding,
-          top: 30,
-          bottom: 25,
+          top: 45,
+          bottom: 5,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

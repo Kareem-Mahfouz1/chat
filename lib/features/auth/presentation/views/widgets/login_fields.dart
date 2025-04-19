@@ -20,7 +20,8 @@ class LoginFields extends StatelessWidget {
           TextFormField(
             controller: context.read<LoginCubit>().emailController,
             validator: Validator.validateEmail,
-            keyboardType: TextInputType.phone,
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               hintText: 'Enter your email',
               floatingLabelStyle:
@@ -37,8 +38,10 @@ class LoginFields extends StatelessWidget {
                 controller: context.read<LoginCubit>().passwordController,
                 obscureText: isObscured,
                 validator: Validator.validatePassword,
+                textInputAction: TextInputAction.done,
                 decoration: InputDecoration(
                   hintText: 'Enter your password',
+                  errorMaxLines: 3,
                   floatingLabelStyle:
                       Styles.textStyle14Regular.copyWith(color: kPrimaryColor),
                   label: const Text('Password'),
