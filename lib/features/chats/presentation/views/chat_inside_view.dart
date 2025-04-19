@@ -31,7 +31,7 @@ class _ChatInsideViewState extends State<ChatInsideView>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
+          _scrollController.position.maxScrollExtent + 70,
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
         );
@@ -42,7 +42,6 @@ class _ChatInsideViewState extends State<ChatInsideView>
   @override
   void didChangeMetrics() {
     super.didChangeMetrics();
-    print('-------------------------------------------metrics');
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
     if (bottomInset > 0.0) {
       Future.delayed(const Duration(milliseconds: 100), _scrollToBottom);
@@ -89,14 +88,12 @@ class _ChatInsideViewState extends State<ChatInsideView>
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting &&
                     !snapshot.hasData) {
-                  print('----------------------------------waiting');
                   return const CustomLoadingIndicator();
                 }
                 final result = snapshot.data!;
                 return result.fold(
                   (failure) => Center(child: Text(failure.errMessage)),
                   (messages) {
-                    print('---------------------------------done');
                     WidgetsBinding.instance
                         .addPostFrameCallback((_) => _scrollToBottom());
                     return messages.isEmpty

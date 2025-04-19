@@ -19,7 +19,7 @@ class RegisterAppbar extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 35),
+            const SizedBox(height: 50),
             Text(
               'Register',
               style: Styles.textStyle30.copyWith(color: Colors.white),
@@ -29,7 +29,7 @@ class RegisterAppbar extends StatelessWidget {
               'Fill up your details to register.',
               style: Styles.textStyle20.copyWith(color: Colors.white),
             ),
-            const SizedBox(height: 50)
+            const SizedBox(height: 35)
           ],
         ),
       ),

@@ -9,12 +9,10 @@ class CustomLoadingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Image.asset(
-        Assets.loadingSpinner,
-        width: width,
-        height: height,
-      ),
+    return Image.asset(
+      Assets.loadingSpinner,
+      width: width,
+      height: height,
     );
   }
 }

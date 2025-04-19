@@ -75,8 +75,6 @@ class _SplashBodyState extends State<SplashBody>
 
   void handleNavigation() async {
     await Future.delayed(const Duration(seconds: 3));
-    // //TODO
-    // await FirebaseAuth.instance.signOut();
 
     final onboardingComplete = await OnboardingStorage().isOnboardingComplete();
 

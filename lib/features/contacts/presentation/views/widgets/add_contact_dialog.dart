@@ -34,7 +34,7 @@ class AddContactDialog extends StatelessWidget {
           content: Form(
             key: cubit.formKey,
             child: state is AddContactLoading
-                ? const Center(child: CustomLoadingIndicator())
+                ? const CustomLoadingIndicator()
                 : TextFormField(
                     controller: cubit.phoneController,
                     keyboardType: TextInputType.phone,

@@ -21,10 +21,4 @@ class ContactsCubit extends Cubit<ContactsState> {
       },
     );
   }
-
-  @override
-  Future<void> close() {
-    print("-------------------------------------------ContactsCubit closed!");
-    return super.close();
-  }
 }
