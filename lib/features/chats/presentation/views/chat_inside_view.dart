@@ -9,7 +9,7 @@ import 'package:chat/features/chats/data/repos/messages_repo_impl.dart';
 import 'package:chat/features/chats/presentation/cubits/messages_cubit/messages_cubit.dart';
 import 'package:chat/features/chats/presentation/views/widgets/chat_inside_appbar.dart';
 import 'package:chat/features/chats/presentation/views/widgets/chat_text_field.dart';
-import 'package:chat/features/chats/presentation/views/widgets/message_item.dart';
+import 'package:chat/features/chats/presentation/views/widgets/message_item_wrapper.dart';
 import 'package:dartz/dartz.dart' show Either;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -26,12 +26,14 @@ class ChatInsideView extends StatefulWidget {
 class _ChatInsideViewState extends State<ChatInsideView>
     with WidgetsBindingObserver {
   final ScrollController _scrollController = ScrollController();
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+  final List<Message> _messages = [];
 
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent + 70,
+          _scrollController.position.maxScrollExtent,
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
         );
@@ -94,30 +96,27 @@ class _ChatInsideViewState extends State<ChatInsideView>
                 return result.fold(
                   (failure) => Center(child: Text(failure.errMessage)),
                   (messages) {
-                    WidgetsBinding.instance
-                        .addPostFrameCallback((_) => _scrollToBottom());
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (_messages.length < messages.length) {
+                        final newItems = messages.sublist(_messages.length);
+                        for (int i = 0; i < newItems.length; i++) {
+                          _messages.add(newItems[i]);
+                          _listKey.currentState
+                              ?.insertItem(_messages.length - 1);
+                        }
+                      }
+                      _scrollToBottom();
+                    });
                     return messages.isEmpty
                         ? const EmptyListIndicator(text: 'No messages yet')
-                        : ListView.builder(
+                        : AnimatedList(
+                            key: _listKey,
                             controller: _scrollController,
-                            itemCount: messages.length,
-                            itemBuilder: (context, index) {
-                              final msg = messages[index];
-                              final isMe = msg.senderId ==
-                                  FirebaseAuth.instance.currentUser!.uid;
-                              return Row(
-                                children: [
-                                  if (!isMe)
-                                    const SizedBox()
-                                  else
-                                    const Spacer(),
-                                  MessageItem(
-                                    text: msg.text,
-                                    date: TimeOfDay.fromDateTime(msg.timestamp)
-                                        .format(context),
-                                  ),
-                                ],
-                              );
+                            initialItemCount: _messages.length,
+                            itemBuilder: (context, index, animation) {
+                              final msg = _messages[index];
+                              return MessageItemWrapper(
+                                  message: msg, animation: animation);
                             },
                           );
                   },

@@ -3,7 +3,7 @@ import 'package:chat/core/utils/app_router.dart';
 import 'package:chat/core/widgets/custom_loading_indicator.dart';
 import 'package:chat/core/widgets/empty_list.dart';
 import 'package:chat/features/chats/presentation/cubits/chats_cubit/chats_cubit.dart';
-import 'package:chat/features/chats/presentation/views/widgets/chat_item.dart';
+import 'package:chat/features/chats/presentation/views/widgets/animated_chat_item.dart';
 import 'package:chat/features/chats/presentation/views/widgets/chats_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,7 +38,8 @@ class ChatsView extends StatelessWidget {
                                     AppRouter.kChatInsideView,
                                     extra: state.chatList[index]);
                               },
-                              child: ChatItem(chat: state.chatList[index]),
+                              child: AnimatedChatItem(
+                                  chat: state.chatList[index], index: index),
                             );
                           },
                         );
