@@ -26,9 +26,12 @@ class _ChatTextFieldState extends State<ChatTextField> {
           Expanded(
             child: TextFormField(
               controller: messageController,
+              maxLines: 3,
+              minLines: 1,
               decoration: InputDecoration(
                 hintText: 'Message',
-                contentPadding: const EdgeInsets.only(left: 20),
+                contentPadding: const EdgeInsets.only(
+                    left: 20, right: 5, top: 5, bottom: 5),
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(

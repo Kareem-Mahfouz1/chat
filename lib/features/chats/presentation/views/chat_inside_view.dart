@@ -1,12 +1,16 @@
 import 'package:chat/constants.dart';
+import 'package:chat/core/errors/failures.dart';
 import 'package:chat/core/utils/assets.dart';
 import 'package:chat/core/widgets/custom_loading_indicator.dart';
 import 'package:chat/core/widgets/empty_list.dart';
 import 'package:chat/features/chats/data/models/chat_model.dart';
+import 'package:chat/features/chats/data/models/message_model.dart';
+import 'package:chat/features/chats/data/repos/messages_repo_impl.dart';
 import 'package:chat/features/chats/presentation/cubits/messages_cubit/messages_cubit.dart';
 import 'package:chat/features/chats/presentation/views/widgets/chat_inside_appbar.dart';
 import 'package:chat/features/chats/presentation/views/widgets/chat_text_field.dart';
 import 'package:chat/features/chats/presentation/views/widgets/message_item.dart';
+import 'package:dartz/dartz.dart' show Either;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,8 +23,45 @@ class ChatInsideView extends StatefulWidget {
   State<ChatInsideView> createState() => _ChatInsideViewState();
 }
 
-class _ChatInsideViewState extends State<ChatInsideView> {
+class _ChatInsideViewState extends State<ChatInsideView>
+    with WidgetsBindingObserver {
   final ScrollController _scrollController = ScrollController();
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    print('-------------------------------------------metrics');
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+    if (bottomInset > 0.0) {
+      Future.delayed(const Duration(milliseconds: 100), _scrollToBottom);
+    }
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final otherUserId = widget.chatModel.participants
@@ -43,37 +84,47 @@ class _ChatInsideViewState extends State<ChatInsideView> {
           Positioned.fill(
             top: 80,
             bottom: 65,
-            child: BlocBuilder<MessagesCubit, MessagesState>(
-              builder: (context, state) {
-                if (state is MessagesFailure) {
-                  return Center(child: Text(state.errMessage));
-                } else if (state is MessagesSuccess) {
-                  final messages = state.messageList;
-                  return messages.isEmpty
-                      ? const EmptyListIndicator(text: 'No messages yet')
-                      : ListView.builder(
-                          itemCount: messages.length,
-                          itemBuilder: (context, index) {
-                            final msg = messages[index];
-                            final isMe = msg.senderId ==
-                                FirebaseAuth.instance.currentUser?.uid;
-                            return Row(
-                              children: [
-                                if (!isMe) const SizedBox() else const Spacer(),
-                                MessageItem(
-                                  text: msg.text,
-                                  date: TimeOfDay.fromDateTime(msg.timestamp)
-                                      .format(context),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                } else if (state is MessagesLoading) {
+            child: StreamBuilder<Either<Failure, List<Message>>>(
+              stream: MessageRepoImpl().streamMessages(widget.chatModel.chatId),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting &&
+                    !snapshot.hasData) {
+                  print('----------------------------------waiting');
                   return const CustomLoadingIndicator();
-                } else {
-                  return const Center(child: Text('initial'));
                 }
+                final result = snapshot.data!;
+                return result.fold(
+                  (failure) => Center(child: Text(failure.errMessage)),
+                  (messages) {
+                    print('---------------------------------done');
+                    WidgetsBinding.instance
+                        .addPostFrameCallback((_) => _scrollToBottom());
+                    return messages.isEmpty
+                        ? const EmptyListIndicator(text: 'No messages yet')
+                        : ListView.builder(
+                            controller: _scrollController,
+                            itemCount: messages.length,
+                            itemBuilder: (context, index) {
+                              final msg = messages[index];
+                              final isMe = msg.senderId ==
+                                  FirebaseAuth.instance.currentUser!.uid;
+                              return Row(
+                                children: [
+                                  if (!isMe)
+                                    const SizedBox()
+                                  else
+                                    const Spacer(),
+                                  MessageItem(
+                                    text: msg.text,
+                                    date: TimeOfDay.fromDateTime(msg.timestamp)
+                                        .format(context),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                  },
+                );
               },
             ),
           ),
