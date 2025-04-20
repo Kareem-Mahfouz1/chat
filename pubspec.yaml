@@ -44,6 +44,7 @@ dependencies:
   intl: ^0.20.2
   material_design_icons_flutter: ^7.0.7296
   modal_progress_hud_nsn: ^0.5.1
+  rename: ^3.0.2
   shared_preferences: ^2.5.3
 
 dev_dependencies:
