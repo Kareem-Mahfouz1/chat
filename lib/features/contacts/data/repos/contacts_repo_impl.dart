@@ -27,6 +27,8 @@ class ContactsRepoImpl {
       String phoneNumber) async {
     try {
       final userId = FirebaseAuth.instance.currentUser!.uid;
+
+      // 1. Look up user by phone number
       final query = await _firestore
           .collection('users')
           .where('phoneNumber', isEqualTo: phoneNumber)
@@ -45,32 +47,35 @@ class ContactsRepoImpl {
         return Left(ServerFailure("You can't add yourself as a contact."));
       }
 
+      // 2. Get current user's contact list
       final currentUserDoc =
           await _firestore.collection('users').doc(userId).get();
-      final data = currentUserDoc.data() ?? {};
+      final currentData = currentUserDoc.data() ?? {};
+      final currentContactsRaw =
+          List<Map<String, dynamic>>.from(currentData['contacts'] ?? []);
 
-      List<dynamic> currentContactsRaw = data['contacts'] ?? [];
-      final currentContacts =
-          List<Map<String, dynamic>>.from(currentContactsRaw);
-
-      final newContact = {
-        'name': contactUser.displayName,
-        'phoneNumber': contactUser.phoneNumber,
-      };
-
-      final alreadyAdded = currentContacts
-          .any((c) => c['phoneNumber'] == newContact['phoneNumber']);
+      // 3. Check for duplicates
+      final alreadyAdded =
+          currentContactsRaw.any((c) => c['uid'] == contactUser.uid);
 
       if (alreadyAdded) {
         return Left(ServerFailure("Contact already added."));
-      } else {
-        currentContacts.add(newContact);
-
-        await _firestore
-            .collection('users')
-            .doc(userId)
-            .update({'contacts': currentContacts});
       }
+
+      // 4. Create new contact and add
+      final newContact = Contact(
+        uid: contactUser.uid,
+        name: contactUser.displayName,
+        phoneNumber: contactUser.phoneNumber,
+      );
+
+      currentContactsRaw.add(newContact.toMap());
+
+      // 5. Update Firestore
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .update({'contacts': currentContactsRaw});
 
       return const Right(null);
     } on FirebaseException catch (e) {

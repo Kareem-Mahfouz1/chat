@@ -1,3 +1,4 @@
+import 'package:chat/core/models/user_model.dart';
 import 'package:chat/core/utils/service_locator.dart';
 import 'package:chat/features/auth/data/repos/auth_repo_impl.dart';
 import 'package:chat/core/services/user_repo_impl.dart';
@@ -19,6 +20,7 @@ import 'package:chat/features/onboarding/cubits/on_boarding_cubit.dart';
 import 'package:chat/features/onboarding/on_boarding.dart';
 import 'package:chat/features/settings/presentation/cubits/settings_cubit/settings_cubit.dart';
 import 'package:chat/features/settings/presentation/cubits/user_cubit/user_cubit.dart';
+import 'package:chat/features/settings/presentation/views/edit_profile_view.dart';
 import 'package:chat/features/splash/splash_view.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,6 +33,7 @@ abstract class AppRouter {
   static const kHomeView = '/homeView';
   static const kChatInsideView = '/chatInsideView';
   static const kStartChatView = '/startChatView';
+  static const kEditProfileView = '/editProfileView';
   static final router = GoRouter(
     routes: [
       GoRoute(
@@ -62,6 +65,15 @@ abstract class AppRouter {
           child: BlocProvider(
             create: (context) => LoginCubit(getIt.get<AuthRepoImpl>()),
             child: const LoginView(),
+          ),
+        ),
+      ),
+      GoRoute(
+        path: kEditProfileView,
+        pageBuilder: (context, state) => AppRouter.buildSlideTransition(
+          child: BlocProvider(
+            create: (context) => SettingsCubit(getIt.get<UserRepoImpl>()),
+            child: EditProfileView(user: state.extra as UserModel),
           ),
         ),
       ),

@@ -57,14 +57,55 @@ class UserRepoImpl {
     }
   }
 
-  Future<Either<Failure, void>> updateUserProfile(UserModel user) async {
+  Future<Either<Failure, void>> updateUserProfile(UserModel newUser) async {
     try {
-      await _firestore.collection('users').doc(user.uid).update(user.toMap());
+      final uid = newUser.uid;
+      final newName = newUser.displayName;
+      final newPhone = newUser.phoneNumber;
+
+      final userRef = _firestore.collection('users').doc(uid);
+
+      // 1. Update user document
+      await userRef.update(newUser.toMap());
+
+      // 2. Update all participantNames in chats
+      final chatDocs = await _firestore
+          .collection('chats')
+          .where('participants', arrayContains: uid)
+          .get();
+
+      for (final doc in chatDocs.docs) {
+        await doc.reference.update({
+          'participantNames.$uid': newName,
+        });
+      }
+
+      // 3. Update contact lists in all users
+      final allUsers = await _firestore.collection('users').get();
+
+      for (final userDoc in allUsers.docs) {
+        final data = userDoc.data();
+        final contacts = (data['contacts'] as List<dynamic>? ?? [])
+            .cast<Map<String, dynamic>>();
+
+        final updatedContacts = contacts.map((contact) {
+          if (contact['uid'] == uid) {
+            return {
+              'uid': uid,
+              'name': newName,
+              'phoneNumber': newPhone,
+            };
+          }
+          return contact;
+        }).toList();
+        await userDoc.reference.update({'contacts': updatedContacts});
+      }
+
       return const Right(null);
     } on FirebaseException catch (e) {
       return Left(ServerFailure.fromFirebaseException(e));
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ServerFailure("Unexpected error: ${e.toString()}"));
     }
   }
 

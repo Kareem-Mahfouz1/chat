@@ -1,6 +1,7 @@
 import 'package:chat/core/utils/app_router.dart';
 import 'package:chat/core/widgets/custom_loading_indicator.dart';
 import 'package:chat/features/settings/presentation/cubits/settings_cubit/settings_cubit.dart';
+import 'package:chat/features/settings/presentation/cubits/user_cubit/user_cubit.dart';
 import 'package:chat/features/settings/presentation/views/widgets/confirmation_dialog.dart';
 import 'package:chat/features/settings/presentation/views/widgets/info_card.dart';
 import 'package:chat/features/settings/presentation/views/widgets/settings_appbar.dart';
@@ -43,8 +44,16 @@ class SettingsView extends StatelessWidget {
                   text: 'Edit Profile',
                   icon: Icons.edit_outlined,
                   onTap: () {
-                    // TODO
-                    // GoRouter.of(context).go(AppRouter.kEditProfileView);
+                    final user = context.read<UserCubit>().user;
+                    GoRouter.of(context)
+                        .push(AppRouter.kEditProfileView, extra: user)
+                        .then(
+                      (_) {
+                        if (context.mounted) {
+                          return context.read<UserCubit>().loadUser();
+                        }
+                      },
+                    );
                   },
                 ),
                 SettingsItem(
