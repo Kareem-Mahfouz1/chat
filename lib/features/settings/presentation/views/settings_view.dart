@@ -2,8 +2,9 @@ import 'package:chat/core/utils/app_router.dart';
 import 'package:chat/core/widgets/custom_loading_indicator.dart';
 import 'package:chat/features/settings/presentation/cubits/settings_cubit/settings_cubit.dart';
 import 'package:chat/features/settings/presentation/cubits/user_cubit/user_cubit.dart';
-import 'package:chat/features/settings/presentation/views/widgets/confirmation_dialog.dart';
+import 'package:chat/features/settings/presentation/views/widgets/delete_account_confirmation_dialog.dart';
 import 'package:chat/features/settings/presentation/views/widgets/info_card.dart';
+import 'package:chat/features/settings/presentation/views/widgets/logout_confirmation_dialog.dart';
 import 'package:chat/features/settings/presentation/views/widgets/settings_appbar.dart';
 import 'package:chat/features/settings/presentation/views/widgets/settings_item.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +63,8 @@ class SettingsView extends StatelessWidget {
                   onTap: () {
                     showDialog(
                       context: context,
-                      builder: (context) => const ConfirmationDialog(),
+                      builder: (context) =>
+                          const DeleteAccountConfirmationDialog(),
                     );
                   },
                 ),
@@ -70,7 +72,10 @@ class SettingsView extends StatelessWidget {
                   text: 'Logout',
                   icon: Icons.logout_outlined,
                   onTap: () {
-                    context.read<SettingsCubit>().logout();
+                    showDialog(
+                      context: context,
+                      builder: (context) => const LogoutConfirmationDialog(),
+                    );
                   },
                 ),
               ],

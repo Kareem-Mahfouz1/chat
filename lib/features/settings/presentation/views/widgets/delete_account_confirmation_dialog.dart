@@ -3,8 +3,8 @@ import 'package:chat/features/settings/presentation/cubits/settings_cubit/settin
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ConfirmationDialog extends StatelessWidget {
-  const ConfirmationDialog({super.key});
+class DeleteAccountConfirmationDialog extends StatelessWidget {
+  const DeleteAccountConfirmationDialog({super.key});
 
   @override
   Widget build(BuildContext context) {

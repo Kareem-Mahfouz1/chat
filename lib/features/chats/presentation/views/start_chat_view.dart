@@ -38,18 +38,22 @@ class StartChatView extends StatelessWidget {
                                 final chatModel = await ChatsRepoImpl()
                                     .getOrCreateChat(
                                         state.contacts[index].phoneNumber);
-                                chatModel.fold((l) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(l.errMessage),
-                                    ),
-                                  );
-                                }, (r) {
-                                  if (context.mounted) {
-                                    context.push(AppRouter.kChatInsideView,
-                                        extra: r);
-                                  }
-                                });
+                                chatModel.fold(
+                                  (l) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(l.errMessage),
+                                      ),
+                                    );
+                                  },
+                                  (chat) {
+                                    if (context.mounted) {
+                                      GoRouter.of(context).pushReplacement(
+                                          AppRouter.kChatInsideView,
+                                          extra: chat);
+                                    }
+                                  },
+                                );
                               },
                             );
                           },

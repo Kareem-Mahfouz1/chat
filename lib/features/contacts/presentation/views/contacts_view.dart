@@ -1,7 +1,9 @@
 import 'package:chat/constants.dart';
+import 'package:chat/core/utils/app_router.dart';
 import 'package:chat/core/utils/service_locator.dart';
 import 'package:chat/core/widgets/custom_loading_indicator.dart';
 import 'package:chat/core/widgets/empty_list.dart';
+import 'package:chat/features/chats/data/repos/chats_repo_impl.dart';
 import 'package:chat/features/contacts/data/repos/contacts_repo_impl.dart';
 import 'package:chat/features/contacts/presentation/cubits/add_contact_cubit/add_contact_cubit.dart';
 import 'package:chat/features/contacts/presentation/cubits/contacts_cubit/contacts_cubit.dart';
@@ -10,6 +12,7 @@ import 'package:chat/features/contacts/presentation/views/widgets/contact_item.d
 import 'package:chat/features/contacts/presentation/views/widgets/contacts_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class ContactsView extends StatelessWidget {
@@ -35,8 +38,31 @@ class ContactsView extends StatelessWidget {
                           padding: const EdgeInsets.all(0),
                           itemCount: state.contacts.length,
                           itemBuilder: (context, index) {
-                            return ContactItem(
-                              name: state.contacts[index].name,
+                            return InkWell(
+                              onTap: () async {
+                                final chatModel = await ChatsRepoImpl()
+                                    .getOrCreateChat(
+                                        state.contacts[index].phoneNumber);
+                                chatModel.fold(
+                                  (l) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(l.errMessage),
+                                      ),
+                                    );
+                                  },
+                                  (chat) {
+                                    if (context.mounted) {
+                                      GoRouter.of(context).push(
+                                          AppRouter.kChatInsideView,
+                                          extra: chat);
+                                    }
+                                  },
+                                );
+                              },
+                              child: ContactItem(
+                                name: state.contacts[index].name,
+                              ),
                             );
                           },
                         );
