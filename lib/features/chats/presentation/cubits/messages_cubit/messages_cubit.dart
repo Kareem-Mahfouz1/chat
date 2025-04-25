@@ -16,6 +16,7 @@ class MessagesCubit extends Cubit<MessagesState> {
     emit(MessagesLoading());
     _sub?.cancel();
     _sub = messageRepoImpl.streamMessages(chatId).listen((result) {
+      if (isClosed) return;
       result.fold(
         (failure) {
           emit(MessagesFailure(errMessage: failure.errMessage));
@@ -31,11 +32,17 @@ class MessagesCubit extends Cubit<MessagesState> {
     final result = await messageRepoImpl.sendMessage(chatId, message);
     result.fold(
       (failure) {
-        emit(MessageSendFailure(errMessage: failure.errMessage));
+        emit(MessageSendFailure(errMessage: 'failure.errMessage'));
       },
       (_) {
         // if success don't do anything, the message will be shown automatically
       },
     );
+  }
+
+  @override
+  Future<void> close() {
+    _sub?.cancel();
+    return super.close();
   }
 }

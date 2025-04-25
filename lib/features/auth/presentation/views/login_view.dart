@@ -63,7 +63,7 @@ class LoginView extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 25),
-                    GestureDetector(
+                    InkWell(
                       onTap: () {
                         GoRouter.of(context).pop();
                       },

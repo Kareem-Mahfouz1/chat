@@ -1,3 +1,4 @@
+import 'package:chat/core/services/notification_service.dart';
 import 'package:chat/features/auth/data/repos/auth_repo_impl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +7,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  LoginCubit(this.authRepoImpl) : super(LoginInitial());
+  LoginCubit(this.authRepoImpl, this.notificationService)
+      : super(LoginInitial());
   final AuthRepoImpl authRepoImpl;
+  final NotificationService notificationService;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -21,7 +24,8 @@ class LoginCubit extends Cubit<LoginState> {
         (failure) {
           emit(LoginFailure(errMessage: failure.errMessage));
         },
-        (userCredential) {
+        (userCredential) async {
+          await notificationService.saveFCMToken();
           emit(LoginSuccess(userCredential: userCredential));
         },
       );

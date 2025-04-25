@@ -6,6 +6,8 @@ class ChatModel {
   final String lastMessage;
   final DateTime lastUpdated;
   final Map<String, String> participantNames;
+  final Map<String, int> unreadCounts;
+  final Map<String, bool> inChat;
 
   ChatModel({
     required this.chatId,
@@ -13,6 +15,8 @@ class ChatModel {
     required this.lastMessage,
     required this.lastUpdated,
     required this.participantNames,
+    required this.unreadCounts,
+    required this.inChat,
   });
 
   factory ChatModel.fromDoc(DocumentSnapshot doc) {
@@ -24,7 +28,7 @@ class ChatModel {
     if (raw is Timestamp) {
       lastUpdated = raw.toDate();
     } else {
-      lastUpdated = DateTime.now(); // fallback
+      lastUpdated = DateTime.now();
     }
 
     return ChatModel(
@@ -34,6 +38,8 @@ class ChatModel {
       lastUpdated: lastUpdated,
       participantNames:
           Map<String, String>.from(data['participantNames'] ?? {}),
+      unreadCounts: Map<String, int>.from(data['unreadCounts'] ?? {}),
+      inChat: Map<String, bool>.from(data['inChat'] ?? {}),
     );
   }
 }

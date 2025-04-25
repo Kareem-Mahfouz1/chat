@@ -63,15 +63,25 @@ class ChatsRepoImpl {
           .doc(userId)
           .get())['displayName'];
 
-      final chatRef = await _firestore.collection('chats').add({
-        'participants': [userId, otherUserId],
-        'lastMessage': '',
-        'lastUpdated': FieldValue.serverTimestamp(),
-        'participantNames': {
-          userId: currentUserName,
-          otherUserId: otherUserName,
-        }
-      });
+      final chatRef = await _firestore.collection('chats').add(
+        {
+          'participants': [userId, otherUserId],
+          'lastMessage': '',
+          'lastUpdated': FieldValue.serverTimestamp(),
+          'participantNames': {
+            userId: currentUserName,
+            otherUserId: otherUserName,
+          },
+          'unreadCounts': {
+            userId: 0,
+            otherUserId: 0,
+          },
+          'inChat': {
+            userId: false,
+            otherUserId: false,
+          },
+        },
+      );
 
       final chatDoc = await chatRef.get();
       final chat = ChatModel.fromDoc(chatDoc);
@@ -82,5 +92,28 @@ class ChatsRepoImpl {
     } catch (e) {
       return Left(ServerFailure("Unexpected error: ${e.toString()}"));
     }
+  }
+
+  Future<Either<Failure, void>> markChatAsRead(String chatId) async {
+    try {
+      final userId = FirebaseAuth.instance.currentUser!.uid;
+
+      await _firestore.collection('chats').doc(chatId).update({
+        'unreadCounts.$userId': 0,
+      });
+
+      return const Right(null);
+    } on FirebaseException catch (e) {
+      return Left(ServerFailure.fromFirebaseException(e));
+    } catch (e) {
+      return Left(ServerFailure("Unexpected error: ${e.toString()}"));
+    }
+  }
+
+  Future<void> setUserInChatStatus(String chatId, bool isInChat) async {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    await _firestore.collection('chats').doc(chatId).update({
+      'inChat.$userId': isInChat,
+    });
   }
 }

@@ -6,6 +6,7 @@ import 'package:chat/core/widgets/empty_list.dart';
 import 'package:chat/features/chats/data/models/chat_model.dart';
 import 'package:chat/features/chats/data/models/message_model.dart';
 import 'package:chat/features/chats/data/repos/messages_repo_impl.dart';
+import 'package:chat/features/chats/presentation/cubits/chats_cubit/chats_cubit.dart';
 import 'package:chat/features/chats/presentation/cubits/messages_cubit/messages_cubit.dart';
 import 'package:chat/features/chats/presentation/views/widgets/chat_inside_appbar.dart';
 import 'package:chat/features/chats/presentation/views/widgets/chat_text_field.dart';
@@ -28,6 +29,7 @@ class _ChatInsideViewState extends State<ChatInsideView>
   final ScrollController _scrollController = ScrollController();
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   final List<Message> _messages = [];
+  late ChatsCubit _chatsCubit;
 
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -53,11 +55,25 @@ class _ChatInsideViewState extends State<ChatInsideView>
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
+    _chatsCubit = context.read<ChatsCubit>();
+    Future.microtask(() {
+      if (mounted) {
+        context
+            .read<ChatsCubit>()
+            .setUserInChatStatus(widget.chatModel.chatId, true);
+      }
+    });
+    Future.microtask(() {
+      if (mounted) {
+        context.read<ChatsCubit>().markAsRead(widget.chatModel.chatId);
+      }
+    });
     super.initState();
   }
 
   @override
   void dispose() {
+    _chatsCubit.setUserInChatStatus(widget.chatModel.chatId, false);
     WidgetsBinding.instance.removeObserver(this);
     _scrollController.dispose();
     super.dispose();
@@ -96,7 +112,7 @@ class _ChatInsideViewState extends State<ChatInsideView>
                 return result.fold(
                   (failure) => Center(child: Text(failure.errMessage)),
                   (messages) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) async {
                       if (_messages.length < messages.length) {
                         final newItems = messages.sublist(_messages.length);
                         for (int i = 0; i < newItems.length; i++) {
@@ -104,9 +120,13 @@ class _ChatInsideViewState extends State<ChatInsideView>
                           _listKey.currentState
                               ?.insertItem(_messages.length - 1);
                         }
+                        await context
+                            .read<ChatsCubit>()
+                            .markAsRead(widget.chatModel.chatId);
                       }
                       _scrollToBottom();
                     });
+
                     return messages.isEmpty
                         ? const EmptyListIndicator(text: 'No messages yet')
                         : AnimatedList(

@@ -5,6 +5,7 @@ class UserModel {
   final String email;
   final String displayName;
   final String phoneNumber;
+  final String? fcmToken;
   final List<Contact> contacts;
 
   UserModel({
@@ -12,6 +13,7 @@ class UserModel {
     required this.email,
     required this.displayName,
     required this.phoneNumber,
+    this.fcmToken,
     this.contacts = const [],
   });
 
@@ -21,6 +23,7 @@ class UserModel {
       email: map['email'] ?? 'N/A',
       displayName: map['displayName'] ?? 'N/A',
       phoneNumber: map['phoneNumber'] ?? 'N/A',
+      fcmToken: map['fcmToken'] ?? 'N/A',
       contacts: (map['contacts'] as List<dynamic>? ?? [])
           .map((c) => Contact.fromMap(Map<String, dynamic>.from(c)))
           .toList(),
@@ -33,6 +36,7 @@ class UserModel {
       'email': email,
       'displayName': displayName,
       'phoneNumber': phoneNumber,
+      'fcmToken': fcmToken,
       'contacts': contacts.map((c) => c.toMap()).toList(),
     };
   }

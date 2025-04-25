@@ -63,8 +63,10 @@ class SettingsView extends StatelessWidget {
                   onTap: () {
                     showDialog(
                       context: context,
-                      builder: (context) =>
-                          const DeleteAccountConfirmationDialog(),
+                      builder: (dialogContext) => BlocProvider.value(
+                        value: context.read<SettingsCubit>(),
+                        child: const DeleteAccountConfirmationDialog(),
+                      ),
                     );
                   },
                 ),
@@ -74,7 +76,10 @@ class SettingsView extends StatelessWidget {
                   onTap: () {
                     showDialog(
                       context: context,
-                      builder: (context) => const LogoutConfirmationDialog(),
+                      builder: (dialogContext) => BlocProvider.value(
+                        value: context.read<SettingsCubit>(),
+                        child: const LogoutConfirmationDialog(),
+                      ),
                     );
                   },
                 ),

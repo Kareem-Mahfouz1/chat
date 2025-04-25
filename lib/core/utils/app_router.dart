@@ -1,4 +1,5 @@
 import 'package:chat/core/models/user_model.dart';
+import 'package:chat/core/services/notification_service.dart';
 import 'package:chat/core/utils/service_locator.dart';
 import 'package:chat/features/auth/data/repos/auth_repo_impl.dart';
 import 'package:chat/core/services/user_repo_impl.dart';
@@ -53,8 +54,8 @@ abstract class AppRouter {
         path: kRegisterView,
         pageBuilder: (context, state) => AppRouter.buildSlideTransition(
           child: BlocProvider(
-            create: (context) => RegisterCubit(
-                getIt.get<AuthRepoImpl>(), getIt.get<UserRepoImpl>()),
+            create: (context) => RegisterCubit(getIt.get<AuthRepoImpl>(),
+                getIt.get<UserRepoImpl>(), getIt.get<NotificationService>()),
             child: const RegisterView(),
           ),
         ),
@@ -63,7 +64,8 @@ abstract class AppRouter {
         path: kLoginView,
         pageBuilder: (context, state) => AppRouter.buildSlideTransition(
           child: BlocProvider(
-            create: (context) => LoginCubit(getIt.get<AuthRepoImpl>()),
+            create: (context) => LoginCubit(
+                getIt.get<AuthRepoImpl>(), getIt.get<NotificationService>()),
             child: const LoginView(),
           ),
         ),
@@ -121,9 +123,18 @@ abstract class AppRouter {
       GoRoute(
         path: kChatInsideView,
         pageBuilder: (context, state) => AppRouter.buildSlideTransition(
-          child: BlocProvider(
-            create: (context) => MessagesCubit(getIt.get<MessageRepoImpl>())
-              ..streamMessages((state.extra as ChatModel).chatId),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => MessagesCubit(getIt.get<MessageRepoImpl>())
+                  ..streamMessages((state.extra as ChatModel).chatId),
+              ),
+              BlocProvider(
+                create: (_) => ChatsCubit(
+                  (getIt.get<ChatsRepoImpl>()),
+                ),
+              )
+            ],
             child: ChatInsideView(chatModel: state.extra as ChatModel),
           ),
         ),

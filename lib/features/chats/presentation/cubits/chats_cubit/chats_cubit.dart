@@ -19,4 +19,12 @@ class ChatsCubit extends Cubit<ChatsState> {
       });
     });
   }
+
+  Future<void> markAsRead(String chatId) async {
+    await chatsRepoImpl.markChatAsRead(chatId);
+  }
+
+  Future<void> setUserInChatStatus(String chatId, bool isInChat) async {
+    await chatsRepoImpl.setUserInChatStatus(chatId, isInChat);
+  }
 }

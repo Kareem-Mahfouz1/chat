@@ -30,15 +30,31 @@ class MessageRepoImpl {
   Future<Either<Failure, void>> sendMessage(
       String chatId, Message message) async {
     try {
-      await _firestore
-          .collection('chats')
-          .doc(chatId)
-          .collection('messages')
-          .add(message.toMap());
+      final chatRef = _firestore.collection('chats').doc(chatId);
+      final userId = message.senderId;
 
-      await _firestore.collection('chats').doc(chatId).update({
+      await chatRef.collection('messages').add(message.toMap());
+
+      final chatDoc = await chatRef.get();
+      final data = chatDoc.data()!;
+      final participants = List<String>.from(data['participants']);
+      final unreadCounts =
+          Map<String, dynamic>.from(data['unreadCounts'] ?? {});
+      final inChat = Map<String, dynamic>.from(data['inChat'] ?? {});
+
+      for (var participant in participants) {
+        if (participant != userId) {
+          final isOtherInChat = inChat[participant] ?? false;
+          if (!isOtherInChat) {
+            unreadCounts[participant] = (unreadCounts[participant] ?? 0) + 1;
+          }
+        }
+      }
+
+      await chatRef.update({
         'lastMessage': message.text,
         'lastUpdated': FieldValue.serverTimestamp(),
+        'unreadCounts': unreadCounts,
       });
 
       return const Right(null);

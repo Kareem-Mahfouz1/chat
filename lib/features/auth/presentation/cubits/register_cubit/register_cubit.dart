@@ -1,3 +1,4 @@
+import 'package:chat/core/services/notification_service.dart';
 import 'package:chat/features/auth/data/repos/auth_repo_impl.dart';
 import 'package:chat/core/services/user_repo_impl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,10 +8,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'register_cubit_state.dart';
 
 class RegisterCubit extends Cubit<RegisterState> {
-  RegisterCubit(this.authRepoImpl, this.userReopimpl)
+  RegisterCubit(this.authRepoImpl, this.userRepoimpl, this.notificationService)
       : super(RegisterInitial());
   final AuthRepoImpl authRepoImpl;
-  final UserRepoImpl userReopimpl;
+  final UserRepoImpl userRepoimpl;
+  final NotificationService notificationService;
+
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -33,12 +36,13 @@ class RegisterCubit extends Cubit<RegisterState> {
                 errMessage: "User ID is null after registration"));
             return;
           }
-          final firestoreResult = await userReopimpl.createUserInFirestore(
+          final firestoreResult = await userRepoimpl.createUserInFirestore(
             uid: uid,
             email: emailController.text,
             displayName: nameController.text,
             phoneNumber: mobileController.text,
           );
+          await notificationService.saveFCMToken();
           firestoreResult.fold(
             (failure) => emit(RegisterFailure(errMessage: failure.errMessage)),
             (_) => emit(RegisterSuccess(userCredential: userCredential)),

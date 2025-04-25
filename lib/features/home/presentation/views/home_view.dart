@@ -17,7 +17,7 @@ class _HomeViewState extends State<HomeView> {
     return Scaffold(
       body: IndexedStack(
         index: currentIndex,
-        children: const [
+        children: [
           ChatsView(),
           ContactsView(),
           SettingsView(),

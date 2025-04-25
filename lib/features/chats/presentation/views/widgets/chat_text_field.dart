@@ -55,18 +55,13 @@ class _ChatTextFieldState extends State<ChatTextField> {
               final text = messageController.text.trim();
               if (text.isNotEmpty) {
                 final msg = Message(
-                  id: '', // Firestore will assign this
+                  id: '',
                   text: text,
                   senderId: FirebaseAuth.instance.currentUser!.uid,
                   timestamp: DateTime.now(),
                 );
-                print('------------------------------done 1');
-                await context
-                    .read<MessagesCubit>()
-                    .sendMessage(widget.chatId, msg);
-                print('------------------------------done 2');
+                context.read<MessagesCubit>().sendMessage(widget.chatId, msg);
                 messageController.clear();
-                print('------------------------------done 3');
               }
             },
           )
