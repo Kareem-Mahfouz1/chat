@@ -120,9 +120,6 @@ class _ChatInsideViewState extends State<ChatInsideView>
                           _listKey.currentState
                               ?.insertItem(_messages.length - 1);
                         }
-                        await context
-                            .read<ChatsCubit>()
-                            .markAsRead(widget.chatModel.chatId);
                       }
                       _scrollToBottom();
                     });
