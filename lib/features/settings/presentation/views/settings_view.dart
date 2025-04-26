@@ -12,8 +12,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
-class SettingsView extends StatelessWidget {
+class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
+
+  @override
+  State<SettingsView> createState() => _SettingsViewState();
+}
+
+class _SettingsViewState extends State<SettingsView> {
+  late SettingsCubit settingsCubit;
+  @override
+  void initState() {
+    settingsCubit = context.read<SettingsCubit>();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +76,7 @@ class SettingsView extends StatelessWidget {
                     showDialog(
                       context: context,
                       builder: (dialogContext) => BlocProvider.value(
-                        value: context.read<SettingsCubit>(),
+                        value: settingsCubit,
                         child: const DeleteAccountConfirmationDialog(),
                       ),
                     );
@@ -77,7 +89,7 @@ class SettingsView extends StatelessWidget {
                     showDialog(
                       context: context,
                       builder: (dialogContext) => BlocProvider.value(
-                        value: context.read<SettingsCubit>(),
+                        value: settingsCubit,
                         child: const LogoutConfirmationDialog(),
                       ),
                     );

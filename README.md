@@ -1,16 +1,78 @@
-# chat
+# 📱 ChatBoat
 
-A new Flutter project.
+A real-time messaging application built with **Flutter** and **Firebase**.  
+Designed with clean architecture principles and a seamless user experience.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## ✨ Features
 
-A few resources to get you started if this is your first Flutter project:
+- 🔐 **Authentication**: Secure email/password registration and login with Firebase Authentication.
+- 👥 **Contacts Management**: Add and search contacts by phone number.
+- 💬 **Real-time Messaging**: Instant message sending and receiving with Firestore.
+- 🔔 **Unread Message Counters**: Keep track of unread messages in the chat list.
+- ⚙️ **Profile Settings**: Edit name and phone number, logout, or delete account.
+- 🎨 **Smooth Animations**: Custom page transitions and animated UI elements.
+- 📲 **Onboarding Flow**: New users are guided through an intuitive onboarding experience.
+- 🌙 **Dark Mode Support**: Adapts automatically based on system theme.
+- 🔥 **Optimized Architecture**: Bloc (Cubit) pattern, clean code, dependency injection (`get_it`).
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🛠️ Tech Stack
+
+- **Flutter** (latest stable version)
+- **Firebase Authentication**
+- **Cloud Firestore**
+- **Firebase Cloud Messaging** (FCM token handling prepared)
+- **Cubit State Management** (`flutter_bloc`)
+- **Service Locator** (`get_it`)
+- **Shared Preferences**
+- **Material Design 3**
+
+---
+
+## 🚀 Installation
+
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/Kareem-Mahfouz1/chatboat.git
+   ```
+2. Navigate into the project directory:
+   ```bash
+   cd chatboat
+   ```
+3. Install dependencies:
+   ```bash
+   flutter pub get
+   ```
+4. Set up Firebase:
+   - Create a project in Firebase Console.
+   - Add Android and/or iOS app credentials.
+   - Download `google-services.json` / `GoogleService-Info.plist` and place them properly.
+   - Enable **Authentication** and **Cloud Firestore** in Firebase.
+
+5. Run the app:
+   ```bash
+   flutter run
+   ```
+
+---
+
+## 📚 Project Structure Overview
+
+```
+lib/
+├── core/
+│   ├── services/          # NotificationService, UserService
+│   ├── utils/             # Constants, router, styles
+│   └── widgets/           # Shared custom widgets
+├── features/
+│   ├── auth/
+│   ├── chats/
+│   ├── contacts/
+│   ├── home/
+│   ├── onboarding/
+│   ├── settings/
+│   └── splash/
+```
